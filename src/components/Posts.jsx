@@ -3,25 +3,26 @@ import { postData } from "../data/posts";
 
 function Posts() {
   const [postList, setPostList] = useState(postData);
-
-  const increaseLike = (postIndex) => {
-    const newPostList = [...postList];
-    newPostList[postIndex].likes += 1;
+  const increaseLike = (id) => {
+    const newPostList = postList.map((post) =>
+      post.id === id ? { ...post, likes: post.likes + 1 } : post
+    );
     setPostList(newPostList);
   };
-  const decreaseLike = (postIndex) => {
-    const newPostList = [...postList];
-    if (newPostList[postIndex].likes > 0) {
-      newPostList[postIndex].likes -= 1;
-    }
+  const decreaseLike = (id) => {
+    const newPostList = postList.map((post) =>
+      post.id === id && post.likes > 0
+        ? { ...post, likes: post.likes - 1 }
+        : post
+    );
     setPostList(newPostList);
   };
   return (
     <div className="app-wrapper">
       <h1 className="app-title">Posts</h1>
       <div className="post-list">
-        {postList.map((post, index) => (
-          <div className="post-item" key={index}>
+        {postList.map((post) => (
+          <div className="post-item" key={post.id}>
             <div className="post-header">
               <h2>{post.title}</h2>
               <div className="post-social-media-stats">
@@ -33,13 +34,13 @@ function Posts() {
             <div className="post-actions">
               <button
                 className="like-button"
-                onClick={() => increaseLike(index)}
+                onClick={() => increaseLike(post.id)}
               >
                 Like
               </button>
               <button
                 className="dislike-button"
-                onClick={() => decreaseLike(index)}
+                onClick={() => decreaseLike(post.id)}
               >
                 Dislike
               </button>
